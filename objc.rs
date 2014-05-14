@@ -17,6 +17,9 @@ pub type id = libc::intptr_t;
 pub static Nil: Class = 0 as Class;
 pub static nil: id = 0 as id;
 
+pub static NSASCIIStringEncoding: int = 1;
+pub static NSUTF8StringEncoding: int = 4;
+
 #[link(name = "Foundation", kind = "framework")]
 extern {
     // objc
@@ -29,6 +32,13 @@ extern {
     pub fn NSStringFromClass(cls: Class) -> id;
     pub fn NSStringFromSelector(sel: SEL) -> id;
 }
+
+#[macro_export]
+macro_rules! NSLog(
+    ($fmt:expr, $($arg:expr)*) => (
+        unsafe { objc::NSLog(objc_string!($fmt), ($($arg),*)); }
+    );
+)
 
 #[macro_export]
 macro_rules! c_str(
