@@ -67,7 +67,7 @@ mod tests {
     pub fn test_string() {
         unsafe {
             let NSString = Class!(NSString);
-            let str1 = objc_string!("test");
+            let str1 = NSString!("test");
             let str2 = send![(NSString) stringWithUTF8String:c_str!("test")];
             assert!(send![str1 length] == 4);
             assert!(send![str2 length] == 4);
@@ -84,26 +84,54 @@ mod tests {
             assert!(send![name length] == 8);
             objc::NSLog(name);
 
-            let format = objc_string!("Test Log");
+            let format = NSString!("Test Log");
             assert!(format != objc::nil);
             objc::NSLog(format);
         }
     }
 
     #[test]
-    pub fn test_array2() {
+    pub fn test_array() {
+        let nsnull = unsafe { send![(Class!(NSNull)) null] };
         unsafe {
-            let nsnull = send![(Class!(NSNull)) null];
+            let array = NSArray![];
+            assert!(send![array count] == 0);
+        }
+        unsafe {
+            let array = NSArray![nsnull];
+            assert!(send![array count] == 1);
+            assert!(send![(array) objectAtIndex:0] == nsnull);
+        }
+        unsafe {
             let array = NSArray![nsnull, nsnull];
             assert!(send![array count] == 2);
             assert!(send![(array) objectAtIndex:0] == nsnull);
         }
-    }
-    pub fn test_array3() {
         unsafe {
             let nsnull = send![(Class!(NSNull)) null];
             let array = NSArray![nsnull, nsnull, nsnull];
             assert!(send![array count] == 3);
+        }
+    }
+    #[test]
+    pub fn test_dictionary() {
+        let nsnull = unsafe { send![(Class!(NSNull)) null] };
+        unsafe {
+            let dict = NSDictionary![];
+            assert!(send![dict count] == 0);
+        }
+        unsafe {
+            let key = NSString!("key");
+            let dict = NSDictionary![key => nsnull];
+            assert!(send![dict count] == 1);
+            assert!(send![(dict) objectForKey:key] == nsnull);
+        }
+        unsafe {
+            let key = NSString!("key");
+            let dict = NSDictionary![key => nsnull, NSString!("key2") => nsnull];
+            assert!(send![dict count] == 2);
+            assert!(send![(dict) objectForKey:key] == nsnull);
+            assert!(send![(dict) objectForKey:NSString!("key2")] == nsnull);
         }
     }
 }

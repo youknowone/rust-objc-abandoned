@@ -11,7 +11,7 @@ struct Crawler {
 
 impl Crawler {
     pub fn with_url(s: &str) -> Crawler {
-        let url = unsafe { send![(send![(Class!(NSURL)) URLWithString:objc_string!(s)]) retain] };
+        let url = unsafe { send![(send![(Class!(NSURL)) URLWithString:NSString!(s)]) retain] };
         Crawler { url: url, data: objc::nil }
     }
 
@@ -25,7 +25,7 @@ impl Crawler {
         unsafe {
             let string = send![(send![(Class!(NSString)) alloc]) initWithData:self.data encoding:objc::NSUTF8StringEncoding];
             assert!(string != objc::nil);
-            objc::NSLog(objc_string!("%@"), string);
+            objc::NSLog(NSString!("%@"), string);
             NSLog!("%@", string);
             send![string release];
         }

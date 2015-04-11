@@ -17,7 +17,6 @@ pub static NSUTF8StringEncoding: isize = 4;
 
 #[repr(C)]
 pub type id = libc::intptr_t;
-pub type idv = [id];
 
 pub type Class = id;
 
@@ -49,7 +48,7 @@ extern {
 #[macro_export]
 macro_rules! NSLog{
     ($fmt:expr, $($arg:expr)*) => (
-        unsafe { ::objc::NSLog(objc_string!($fmt), ($($arg),*)); }
+        unsafe { ::objc::NSLog(NSString!($fmt), ($($arg),*)); }
     );
 }
 
@@ -66,7 +65,7 @@ macro_rules! c_str{
 
 
 #[macro_export]
-macro_rules! objc_string{
+macro_rules! NSString{
     ($val:expr) => (
         send![(Class!(NSString)) stringWithUTF8String:c_str!($val)]
     );
@@ -113,6 +112,13 @@ macro_rules! send{
 macro_rules! NSArray{
     [ $( $x:expr ),* ] => {
         ::objc::objc_msgSend(Class!(NSArray), selector!("arrayWithObjects:"), $($x,)* ::objc::nil)
+    };
+}
+
+#[macro_export]
+macro_rules! NSDictionary{
+    [ $( $k:expr => $x:expr ),* ] => {
+        ::objc::objc_msgSend(Class!(NSDictionary), selector!("dictionaryWithObjectsAndKeys:"), $($x,$k,)* ::objc::nil)
     };
 }
 
