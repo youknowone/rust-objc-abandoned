@@ -76,6 +76,15 @@ mod tests {
     }
 
     #[test]
+    pub fn test_format() {
+        unsafe {
+            let NSString = Class!(NSString);
+            let str = send![(NSString) stringWithFormat:NSString!("%@, %@!"), NSString!("Hello"), NSString!("World")];
+            assert!(send![(str) isEqual:NSString!("Hello, World!")] == 1)
+        }
+    }
+
+    #[test]
     pub fn test_nslog() {
         unsafe {
             let NSString = Class!(NSString);

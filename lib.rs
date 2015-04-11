@@ -94,13 +94,18 @@ macro_rules! send{
     [($obj:expr) $sel:ident] => (
         ::objc::objc_msgSend($obj, selector!(stringify!($sel)))
     );
+    [($obj:expr) $sel:ident : $($argx:expr),*] => (
+        ::objc::objc_msgSend($obj, selector!(concat!(stringify!($sel), ":")), $($argx,)* ::objc::nil)
+    );
     [($obj:expr) $($sel:ident : $arg:expr)+] => (
         ::objc::objc_msgSend($obj, selector!(concat!($(stringify!($sel), ":"),+)), $($arg),+)
     );
     [$obj:ident $sel:ident] => (
         ::objc::objc_msgSend($obj, selector!(stringify!($sel)))
     );
-
+    [$obj:ident $sel:ident : $($argx:expr),*] => (
+        ::objc::objc_msgSend($obj, selector!(concat!(stringify!($sel), ":")), $($argx,)* ::objc::nil)
+    );
     /*
     [$obj:ident $($sel:ident : $arg:expr)+] => (
         ::objc::objc_msgSend($obj, selector!(concat!($(stringify!($sel), ":"),+)), $($arg),+)
