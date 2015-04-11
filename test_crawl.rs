@@ -1,6 +1,4 @@
 
-#![feature(libc)]
-extern crate libc;
 #[macro_use]
 extern crate objc;
 
@@ -26,7 +24,6 @@ impl Crawler {
             let string = send![(send![(Class!(NSString)) alloc]) initWithData:self.data encoding:objc::NSUTF8StringEncoding];
             assert!(string != objc::nil);
             objc::NSLog(NSString!("%@"), string);
-            NSLog!("%@", string);
             send![string release];
         }
     }

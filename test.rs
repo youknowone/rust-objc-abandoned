@@ -44,7 +44,7 @@ mod tests {
             assert!(NSString != objc::Nil);
             let selector = selector!("stringWithUTF8String:");
             assert!(selector != objc::NULL);
-            let string = send![(NSString) stringWithUTF8String:c_str!("test string end")];
+            let string = send![NSString stringWithUTF8String:c_str!("test string end")];
             assert!(string != objc::nil);
             objc::NSLog(string);
         }
@@ -57,7 +57,7 @@ mod tests {
             assert!(NSString != objc::Nil);
             let selector = selector!("stringWithUTF8String:");
             assert!(selector != objc::NULL);
-            let string = send![(NSString) stringWithUTF8String:c_str!("test string end")];
+            let string = send![NSString stringWithUTF8String:c_str!("test string end")];
             assert!(string != objc::nil);
             objc::NSLog(string);
         }
@@ -68,7 +68,7 @@ mod tests {
         unsafe {
             let NSString = Class!(NSString);
             let str1 = NSString!("test");
-            let str2 = send![(NSString) stringWithUTF8String:c_str!("test")];
+            let str2 = send![NSString stringWithUTF8String:c_str!("test")];
             assert!(send![str1 length] == 4);
             assert!(send![str2 length] == 4);
             assert!(send![(str1) isEqual:str2] != 0);
@@ -79,7 +79,7 @@ mod tests {
     pub fn test_format() {
         unsafe {
             let NSString = Class!(NSString);
-            let str = send![(NSString) stringWithFormat:NSString!("%@, %@!"), NSString!("Hello"), NSString!("World")];
+            let str = send![NSString stringWithFormat:NSString!("%@, %@!"), NSString!("Hello"), NSString!("World")];
             assert!(send![(str) isEqual:NSString!("Hello, World!")] == 1)
         }
     }
@@ -122,6 +122,7 @@ mod tests {
             assert!(send![array count] == 3);
         }
     }
+
     #[test]
     pub fn test_dictionary() {
         let nsnull = unsafe { send![(Class!(NSNull)) null] };
@@ -143,4 +144,17 @@ mod tests {
             assert!(send![(dict) objectForKey:NSString!("key2")] == nsnull);
         }
     }
+
+    #[test]
+    pub fn test_cocoa() {
+        unsafe {
+            let NSBundle = Class!(NSBundle);
+            let bundle = send![NSBundle mainBundle];
+            let bundleURL = send![bundle bundleURL];
+            let resourceURL = send![bundle resourceURL];
+            let executableURL = send![bundle executableURL];
+            objc::NSLog(NSString!("%@\n%@\n%@\n"), bundleURL, resourceURL, executableURL);
+        }
+    }
 }
+

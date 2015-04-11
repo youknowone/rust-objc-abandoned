@@ -45,6 +45,13 @@ extern {
     pub fn NSStringFromSelector(sel: SEL) -> id;
 }
 
+#[cfg(target_os="macos")]
+#[link(name = "Cocoa", kind = "framework")]
+#[link(name = "AppKit", kind = "framework")]
+extern {
+
+}
+
 #[macro_export]
 macro_rules! NSLog{
     ($fmt:expr, $($arg:expr)*) => (

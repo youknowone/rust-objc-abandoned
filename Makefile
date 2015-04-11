@@ -17,5 +17,8 @@ crawl:
 	$(RC) $(RFLAGS) test_crawl.rs
 	./test_crawl
 
+app:
+	$(RC) $(RFLAGS) test_app.rs
+	./test_app
 clean:
 	@rm test *.rlib *.dylib
