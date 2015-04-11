@@ -67,7 +67,7 @@ macro_rules! c_str{
 #[macro_export]
 macro_rules! objc_string{
     ($val:expr) => (
-        unsafe { send![(Class!(NSString)) stringWithUTF8String:c_str!($val)] }
+        send![(Class!(NSString)) stringWithUTF8String:c_str!($val)]
     );
 }
 
@@ -75,39 +75,35 @@ macro_rules! objc_string{
 #[macro_export]
 macro_rules! Class{
     ($name:ident) => (
-        unsafe { ::objc::objc_getClass(c_str!(stringify!($name))) }
+        ::objc::objc_getClass(c_str!(stringify!($name)))
     );
 }
 
 #[macro_export]
 macro_rules! selector{
     ($name:expr) => (
-        unsafe { ::objc::sel_registerName(c_str!($name)) }
+        ::objc::sel_registerName(c_str!($name))
     );
     ($name:ident) => (
-        unsafe { ::objc::sel_registerName(c_str!(stringify!($name))) }
+        ::objc::sel_registerName(c_str!(stringify!($name)))
     );
 }
 
 #[macro_export]
 macro_rules! send{
     [($obj:expr) $sel:ident] => (
-        unsafe { ::objc::objc_msgSend($obj, selector!(stringify!($sel))) }
+        ::objc::objc_msgSend($obj, selector!(stringify!($sel)))
     );
     [($obj:expr) $($sel:ident : $arg:expr)+] => (
-        unsafe {
-            ::objc::objc_msgSend($obj, selector!(concat!($(stringify!($sel), ":"),+)), $($arg),+)
-        }
+        ::objc::objc_msgSend($obj, selector!(concat!($(stringify!($sel), ":"),+)), $($arg),+)
     );
     [$obj:ident $sel:ident] => (
-        unsafe { ::objc::objc_msgSend($obj, selector!(stringify!($sel))) }
+        ::objc::objc_msgSend($obj, selector!(stringify!($sel)))
     );
 
     /*
     [$obj:ident $($sel:ident : $arg:expr)+] => (
-        unsafe {
-            ::objc::objc_msgSend($obj, selector!(concat!($(stringify!($sel), ":"),+)), $($arg),+)
-        }
+        ::objc::objc_msgSend($obj, selector!(concat!($(stringify!($sel), ":"),+)), $($arg),+)
     );
     */
 }
