@@ -1,9 +1,7 @@
-#![feature(macro_rules)]
-#![feature(phase)]
 
-extern crate std;
+#![feature(libc)]
 extern crate libc;
-#[phase(syntax,link)]
+#[macro_use]
 extern crate objc;
 
 #[cfg(test)]
@@ -17,7 +15,7 @@ mod tests {
         let c_str = c_str!(str);
         let len = unsafe {
             libc::strlen(c_str)
-        } as uint;
+        } as usize;
         assert!(str.len() == len);
     }
 
@@ -42,7 +40,7 @@ mod tests {
         assert!(NSString != objc::Nil);
         let selector = selector!("stringWithUTF8String:");
         assert!(selector != objc::NULL);
-        let string = send![NSString; stringWithUTF8String:c_str!("test string end")];
+        let string = send![(NSString) stringWithUTF8String:c_str!("test string end")];
         assert!(string != objc::nil);
         unsafe { objc::NSLog(string); }
     }
@@ -53,7 +51,7 @@ mod tests {
         assert!(NSString != objc::Nil);
         let selector = selector!("stringWithUTF8String:");
         assert!(selector != objc::NULL);
-        let string = send![NSString; stringWithUTF8String:c_str!("test string end")];
+        let string = send![(NSString) stringWithUTF8String:c_str!("test string end")];
         assert!(string != objc::nil);
         unsafe { objc::NSLog(string); }
     }
@@ -62,10 +60,10 @@ mod tests {
     pub fn test_string() {
         let NSString = Class!(NSString);
         let str1 = objc_string!("test");
-        let str2 = send![NSString; stringWithUTF8String:c_str!("test")];
-        assert!(send![str1; length].value == 4);
-        assert!(send![str2; length].value == 4);
-        assert!(send![str1; isEqual:str2].value != 0);
+        let str2 = send![(NSString) stringWithUTF8String:c_str!("test")];
+        assert!(send![str1 length] == 4);
+        assert!(send![str2 length] == 4);
+        assert!(send![(str1) isEqual:str2] != 0);
     }
 
     #[test]
@@ -73,7 +71,7 @@ mod tests {
         let NSString = Class!(NSString);
         let name = unsafe { objc::NSStringFromClass(NSString) };
         assert!(name != objc::nil);
-        assert!(send![name; length].value == 8);
+        assert!(send![name length] == 8);
         unsafe { objc::NSLog(name); }
 
         let format = objc_string!("Test Log");

@@ -10,20 +10,21 @@ use std::ffi::CString;
 
 pub type SEL = libc::intptr_t;
 
+#[allow(non_upper_case_globals)]
 pub static NSASCIIStringEncoding: isize = 1;
+#[allow(non_upper_case_globals)]
 pub static NSUTF8StringEncoding: isize = 4;
 
-#[allow(non_camel_case_types)]
-#[derive(PartialEq)]
-#[derive(Copy)]
-pub struct id {
-    pub value: libc::intptr_t,
-}
+#[repr(C)]
+pub type id = libc::intptr_t;
 
 pub type Class = id;
 
-pub static nil: id = id { value: 0 };
-pub static Nil: Class = Class { value: 0 };
+#[allow(non_upper_case_globals)]
+pub static nil: id = 0;
+#[allow(non_upper_case_globals)]
+pub static Nil: Class = 0;
+#[repr(C)]
 pub static NULL: SEL = 0;
 
 /*
@@ -101,6 +102,7 @@ macro_rules! send{
     [$obj:ident $sel:ident] => (
         unsafe { ::objc::objc_msgSend($obj, selector!(stringify!($sel))) }
     );
+
     /*
     [$obj:ident $($sel:ident : $arg:expr)+] => (
         unsafe {
