@@ -90,4 +90,20 @@ mod tests {
         }
     }
 
+    #[test]
+    pub fn test_array2() {
+        unsafe {
+            let nsnull = send![(Class!(NSNull)) null];
+            let array = NSArray![nsnull, nsnull];
+            assert!(send![array count] == 2);
+            assert!(send![(array) objectAtIndex:0] == nsnull);
+        }
+    }
+    pub fn test_array3() {
+        unsafe {
+            let nsnull = send![(Class!(NSNull)) null];
+            let array = NSArray![nsnull, nsnull, nsnull];
+            assert!(send![array count] == 3);
+        }
+    }
 }

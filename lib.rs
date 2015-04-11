@@ -17,6 +17,7 @@ pub static NSUTF8StringEncoding: isize = 4;
 
 #[repr(C)]
 pub type id = libc::intptr_t;
+pub type idv = [id];
 
 pub type Class = id;
 
@@ -106,5 +107,12 @@ macro_rules! send{
         ::objc::objc_msgSend($obj, selector!(concat!($(stringify!($sel), ":"),+)), $($arg),+)
     );
     */
+}
+
+#[macro_export]
+macro_rules! NSArray{
+    [ $( $x:expr ),* ] => {
+        ::objc::objc_msgSend(Class!(NSArray), selector!("arrayWithObjects:"), $($x,)* ::objc::nil)
+    };
 }
 
